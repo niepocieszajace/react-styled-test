@@ -48,14 +48,16 @@ class ListContainer extends Component {
   filterPlanets = planets => {
     const { filter } = this.state;
 
-    return planets.filter(el => {
-      return (
-        el.name.toLowerCase().includes(filter.toLowerCase()) ||
-        el.gravity.includes(filter) ||
-        el.created.includes(filter)
-      );
-    });
+    return planets.filter(el => this.doesContainsPhrase(filter, el));
   };
+
+  doesContainsPhrase = (phrase, object) => {
+    const keys = Object.keys(object)
+
+    return keys.find(key =>
+      object[key].toLowerCase().includes(phrase.toLowerCase())
+    )
+  }
 
   renderPlanetsWithFilter = planets => this.filterPlanets(planets).map(el => <Planet planet={el} key={el.name} />);
 
@@ -63,7 +65,7 @@ class ListContainer extends Component {
     const { data } = this.state;
     return (
       <Container>
-        <StyledInput placeholder="Filter..." type="text" onChange={this.handleInputChange}></StyledInput>
+        <StyledInput placeholder="Filter..." type="text" onChange={this.handleInputChange} />
         {data && this.renderPlanetsWithFilter(data)}
       </Container>
     );
